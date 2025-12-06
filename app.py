@@ -29,14 +29,14 @@ st.set_page_config(
 )
 
 # =========================================================
-# Global Styles (Cookable-inspired)
+# Global Styles (Cookable-inspired, colors swapped)
 # =========================================================
 st.markdown(
     """
     <style>
-    /* Overall background */
+    /* Overall background – now plain white */
     .stApp {
-        background: radial-gradient(circle at top left, #fdfbfb 0, #ebedee 40%, #f7f7f7 100%);
+        background: #ffffff;
     }
 
     /* Main title */
@@ -53,9 +53,9 @@ st.markdown(
         margin-bottom: 1.5rem;
     }
 
-    /* Card-like containers */
+    /* Card-like containers – now light grey instead of white */
     .card {
-        background: #ffffff;
+        background: radial-gradient(circle at top left, #fdfbfb 0, #ebedee 40%, #f7f7f7 100%);
         border-radius: 1.1rem;
         padding: 1.2rem 1.4rem;
         box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
@@ -606,20 +606,14 @@ def step_final_playlist():
 # =========================================================
 render_sidebar()
 
-# Hero section (Cookable-style header)
-col_left, col_right = st.columns([2, 1])
-
-with col_left:
-    st.markdown('<div class="main-title">Smart Playlist Generator</div>', unsafe_allow_html=True)
-    st.markdown(
-        '<div class="main-subtitle">'
-        "Create group playlists that balance everyone’s taste, using a little data magic."
-        "</div>",
-        unsafe_allow_html=True,
-    )
-with col_right:
-    st.metric("Active raters", st.session_state.num_raters)
-    st.metric("Target songs", st.session_state.n_desired_songs)
+# Hero section (Cookable-style header, metrics removed)
+st.markdown('<div class="main-title">Smart Playlist Generator</div>', unsafe_allow_html=True)
+st.markdown(
+    '<div class="main-subtitle">'
+    "Create group playlists that balance everyone’s taste, using a little data magic."
+    "</div>",
+    unsafe_allow_html=True,
+)
 
 step_group_setup()
 step_criteria()
