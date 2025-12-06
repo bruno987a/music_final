@@ -53,7 +53,7 @@ st.markdown(
         margin-bottom: 1.5rem;
     }
 
-    /* Card-like containers – now light grey instead of white */
+    /* Card-like containers – light grey / gradient */
     .card {
         background: radial-gradient(circle at top left, #fdfbfb 0, #ebedee 40%, #f7f7f7 100%);
         border-radius: 1.1rem;
@@ -305,63 +305,64 @@ def render_sidebar():
 # Step 0 – Group Setup
 # =========================================================
 def step_group_setup():
-    st.markdown(
-        """
-        <div class="card">
-            <div class="card-header">Step 0 – Group setup</div>
-            <p style="font-size:0.9rem; color:#6b7280;">
-            Add everyone who will rate songs. We’ll combine all tastes into one smart playlist.
-            </p>
-        """,
-        unsafe_allow_html=True,
-    )
+    with st.container():
+        st.markdown(
+            """
+            <div class="card">
+                <div class="card-header">Step 0 – Group setup</div>
+                <p style="font-size:0.9rem; color:#6b7280;">
+                Add everyone who will rate songs. We’ll combine all tastes into one smart playlist.
+                </p>
+            """,
+            unsafe_allow_html=True,
+        )
 
-    if st.session_state.step == 1:
-        col1, col2 = st.columns([1, 2])
+        if st.session_state.step == 1:
+            col1, col2 = st.columns([1, 2])
 
-        with col1:
-            num = st.number_input(
-                "Number of raters",
-                min_value=1,
-                max_value=10,
-                value=int(st.session_state.num_raters),
-                step=1,
-                key="num_raters_input",
+            with col1:
+                num = st.number_input(
+                    "Number of raters",
+                    min_value=1,
+                    max_value=10,
+                    value=int(st.session_state.num_raters),
+                    step=1,
+                    key="num_raters_input",
+                )
+
+            names = []
+            with col2:
+                for i in range(int(num)):
+                    default_name = (
+                        st.session_state.rater_names[i]
+                        if i < len(st.session_state.rater_names)
+                        else f"User {i+1}"
+                    )
+                    names.append(
+                        st.text_input(
+                            f"Rater {i+1} name",
+                            value=default_name,
+                            key=f"rater_name_{i}",
+                        )
+                    )
+
+            confirm = st.button("✅ Confirm group & continue", use_container_width=True)
+
+            if confirm:
+                clean_names = [(n.strip() or f"User {i+1}") for i, n in enumerate(names)]
+                st.session_state.num_raters = int(num)
+                st.session_state.rater_names = clean_names
+                st.session_state.ratings = {name: {} for name in clean_names}
+                st.session_state.active_rater_idx = 0
+                st.session_state.step = 2
+                st.rerun()
+        else:
+            st.info(
+                "👥 **Group:** "
+                + ", ".join(st.session_state.rater_names)
+                + f" — Total raters: {st.session_state.num_raters}"
             )
 
-        names = []
-        with col2:
-            for i in range(int(num)):
-                default_name = (
-                    st.session_state.rater_names[i]
-                    if i < len(st.session_state.rater_names)
-                    else f"User {i+1}"
-                )
-                names.append(
-                    st.text_input(
-                        f"Rater {i+1} name",
-                        value=default_name,
-                        key=f"rater_name_{i}",
-                    )
-                )
-
-        confirm = st.button("✅ Confirm group & continue", use_container_width=True)
-        st.markdown("</div>", unsafe_allow_html=True)
-
-        if confirm:
-            clean_names = [(n.strip() or f"User {i+1}") for i, n in enumerate(names)]
-            st.session_state.num_raters = int(num)
-            st.session_state.rater_names = clean_names
-            st.session_state.ratings = {name: {} for name in clean_names}
-            st.session_state.active_rater_idx = 0
-            st.session_state.step = 2
-            st.rerun()
-    else:
-        st.info(
-            "👥 **Group:** "
-            + ", ".join(st.session_state.rater_names)
-            + f" — Total raters: {st.session_state.num_raters}"
-        )
         st.markdown("</div>", unsafe_allow_html=True)
 
 
@@ -372,80 +373,85 @@ def step_criteria():
     if st.session_state.step < 2:
         return
 
-    st.markdown(
-        """
-        <div class="card">
-            <div class="card-header">Step 1 – Playlist generation criteria</div>
-            <p style="font-size:0.9rem; color:#6b7280;">
-            Choose how focused the playlist should be and the kind of vibe you want.
-            </p>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    genre_map = {
-        "Rock/Metal/Punk": 1,
-        "Pop/Synth": 2,
-        "Electronic/IDM": 3,
-        "Hip-Hop/RnB": 4,
-        "Jazz/Blues": 5,
-        "Classical": 6,
-        "Folk/Country/Americana": 7,
-        "World/Reggae/Latin": 8,
-        "Experimental/Sound Art": 9,
-        "Spoken/Soundtrack/Misc": 10,
-        "Funk": 11,
-    }
-
-    reverse_genre_map = {v: k for k, v in genre_map.items()}
-
-    if st.session_state.step == 2:
-        col1, col2 = st.columns(2)
-
-        with col1:
-            similarity = st.selectbox(
-                "Similarity level",
-                ["None", "Genre", "Artist", "Mixed"],
-                index=0,
-                format_func=lambda x: "✨ Let the algorithm choose" if x == "None" else x,
-                key="similarity",
-            )
-
-        with col2:
-            key_genre = st.selectbox("Preferred genre", list(genre_map.keys()))
-            st.session_state.chosen_genre = genre_map[key_genre]
-
-        st.session_state.n_desired_songs = st.slider(
-            "Playlist length (number of songs)",
-            5,
-            30,
-            15,
+    with st.container():
+        st.markdown(
+            """
+            <div class="card">
+                <div class="card-header">Step 1 – Playlist generation criteria</div>
+                <p style="font-size:0.9rem; color:#6b7280;">
+                Choose how focused the playlist should be and the kind of vibe you want.
+                </p>
+            """,
+            unsafe_allow_html=True,
         )
 
-        confirm = st.button("✅ Confirm criteria & start rating", use_container_width=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+        genre_map = {
+            "Rock/Metal/Punk": 1,
+            "Pop/Synth": 2,
+            "Electronic/IDM": 3,
+            "Hip-Hop/RnB": 4,
+            "Jazz/Blues": 5,
+            "Classical": 6,
+            "Folk/Country/Americana": 7,
+            "World/Reggae/Latin": 8,
+            "Experimental/Sound Art": 9,
+            "Spoken/Soundtrack/Misc": 10,
+            "Funk": 11,
+        }
 
-        if confirm:
-            st.session_state.criteria_confirmed = True
-            st.session_state.step = 3
-            st.session_state.evaluation_done = False
-            st.session_state.active_rater_idx = 0
-            if "candidate_songs" in st.session_state:
-                del st.session_state["candidate_songs"]
-            st.rerun()
-    else:
-        similarity_value = st.session_state.get("similarity", "None")
-        chosen_genre_id = st.session_state.get("chosen_genre")
-        chosen_genre_name = reverse_genre_map.get(chosen_genre_id, "Unknown")
+        reverse_genre_map = {v: k for k, v in genre_map.items()}
 
-        st.info(
-            f"""
+        if st.session_state.step == 2:
+            col1, col2 = st.columns(2)
+
+            with col1:
+                similarity = st.selectbox(
+                    "Similarity level",
+                    ["None", "Genre", "Artist", "Mixed"],
+                    index=0,
+                    format_func=lambda x: "✨ Let the algorithm choose"
+                    if x == "None"
+                    else x,
+                    key="similarity",
+                )
+
+            with col2:
+                key_genre = st.selectbox("Preferred genre", list(genre_map.keys()))
+                st.session_state.chosen_genre = genre_map[key_genre]
+
+            st.session_state.n_desired_songs = st.slider(
+                "Playlist length (number of songs)",
+                5,
+                30,
+                15,
+            )
+
+            confirm = st.button(
+                "✅ Confirm criteria & start rating", use_container_width=True
+            )
+
+            if confirm:
+                st.session_state.criteria_confirmed = True
+                st.session_state.step = 3
+                st.session_state.evaluation_done = False
+                st.session_state.active_rater_idx = 0
+                if "candidate_songs" in st.session_state:
+                    del st.session_state["candidate_songs"]
+                st.rerun()
+        else:
+            similarity_value = st.session_state.get("similarity", "None")
+            chosen_genre_id = st.session_state.get("chosen_genre")
+            chosen_genre_name = reverse_genre_map.get(chosen_genre_id, "Unknown")
+
+            st.info(
+                f"""
 🎛️ **Criteria selected**  
 • Similarity level: **{similarity_value}**  
 • Genre: **{chosen_genre_name}**  
 • Desired playlist length: **{st.session_state.n_desired_songs} songs**
 """
-        )
+            )
+
         st.markdown("</div>", unsafe_allow_html=True)
 
 
@@ -456,107 +462,114 @@ def step_quick_evaluation():
     if st.session_state.step < 3 or not st.session_state.criteria_confirmed:
         return
 
-    st.markdown(
-        """
-        <div class="card">
-            <div class="card-header">Step 2 – Quick song evaluation</div>
-            <p style="font-size:0.9rem; color:#6b7280;">
-            Everyone rates a handful of songs. We’ll learn what the whole group likes and dislikes.
-            </p>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    rater_names = st.session_state.rater_names
-    idx_rater = st.session_state.active_rater_idx
-    current_user = rater_names[idx_rater]
-
-    st.write(f"**Rater {idx_rater + 1} / {len(rater_names)}:** {current_user}")
-    st.caption("Use the sliders (1 = dislike · 5 = love).")
-
-    st.session_state.ratings.setdefault(current_user, {})
-    user_ratings = st.session_state.ratings[current_user]
-
-    # Generate candidate songs once
-    if "candidate_songs" not in st.session_state:
-        st.session_state.candidate_songs = rand_track_genre(
-            st.session_state.chosen_genre, 5
-        )
-
-    songs_df = st.session_state.candidate_songs
-
-    # Header row
-    header_song_col, header_rating_col = st.columns([3, 2])
-    with header_song_col:
+    with st.container():
         st.markdown(
-            "<div style='background-color:#e5e7eb; padding:0.5rem; "
-            "border-radius:0.75rem 0 0 0.75rem; font-weight:600;'>Songs</div>",
-            unsafe_allow_html=True,
-        )
-    with header_rating_col:
-        st.markdown(
-            "<div style='background-color:#e5e7eb; padding:0.5rem; "
-            "border-radius:0 0.75rem 0.75rem 0; font-weight:600; "
-            "display:flex; justify-content:space-between; align-items:center;'>"
-            "<span>Rating</span>"
-            "<span style='font-weight:400; font-size:0.75rem;'>1 = dislike · 5 = love</span>"
-            "</div>",
+            """
+            <div class="card">
+                <div class="card-header">Step 2 – Quick song evaluation</div>
+                <p style="font-size:0.9rem; color:#6b7280;">
+                Everyone rates a handful of songs. We’ll learn what the whole group likes and dislikes.
+                </p>
+            """,
             unsafe_allow_html=True,
         )
 
-    # Data rows
-    for i, row in songs_df.iterrows():
-        song_col, rating_col = st.columns([3, 2])
+        rater_names = st.session_state.rater_names
+        idx_rater = st.session_state.active_rater_idx
+        current_user = rater_names[idx_rater]
 
-        with song_col:
+        st.write(f"**Rater {idx_rater + 1} / {len(rater_names)}:** {current_user}")
+        st.caption("Use the sliders (1 = dislike · 5 = love).")
+
+        st.session_state.ratings.setdefault(current_user, {})
+        user_ratings = st.session_state.ratings[current_user]
+
+        # Generate candidate songs once
+        if "candidate_songs" not in st.session_state:
+            st.session_state.candidate_songs = rand_track_genre(
+                st.session_state.chosen_genre, 5
+            )
+
+        songs_df = st.session_state.candidate_songs
+
+        # Header row
+        header_song_col, header_rating_col = st.columns([3, 2])
+        with header_song_col:
             st.markdown(
-                f"""
-                <div class="song-row">
-                    <div class="song-title">{row['title']}</div>
-                    <div class="song-artist">{row['artist']}</div>
-                </div>
-                """,
+                "<div style='background-color:#e5e7eb; padding:0.5rem; "
+                "border-radius:0.75rem 0 0 0.75rem; font-weight:600;'>Songs</div>",
+                unsafe_allow_html=True,
+            )
+        with header_rating_col:
+            st.markdown(
+                "<div style='background-color:#e5e7eb; padding:0.5rem; "
+                "border-radius:0 0.75rem 0.75rem 0; font-weight:600; "
+                "display:flex; justify-content:space-between; align-items:center;'>"
+                "<span>Rating</span>"
+                "<span style='font-weight:400; font-size:0.75rem;'>1 = dislike · 5 = love</span>"
+                "</div>",
                 unsafe_allow_html=True,
             )
 
-        with rating_col:
-            rating = st.slider(
-                label="",
-                min_value=1,
-                max_value=5,
-                value=int(user_ratings.get(row["track_id"], 3)),
-                key=f"rating_{current_user}_{i}",
-                step=1,
-            )
-            user_ratings[row["track_id"]] = rating
+        # Data rows
+        for i, row in songs_df.iterrows():
+            song_col, rating_col = st.columns([3, 2])
 
-    # Navigation buttons
-    col_prev, col_next = st.columns([1, 2])
-    with col_next:
-        if idx_rater < len(rater_names) - 1:
-            if st.button("➡️ Save ratings & next person", use_container_width=True):
-                st.session_state.active_rater_idx += 1
-                st.rerun()
-        else:
-            if st.button("🎉 Generate final playlist", type="primary", use_container_width=True):
-                recommended_ids = recommend_group_playlist(
-                    st.session_state.ratings,
-                    st.session_state.n_desired_songs,
+            with song_col:
+                st.markdown(
+                    f"""
+                    <div class="song-row">
+                        <div class="song-title">{row['title']}</div>
+                        <div class="song-artist">{row['artist']}</div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
                 )
 
-                if not recommended_ids:
-                    st.error(
-                        "We didn’t get enough usable ratings to generate recommendations."
+            with rating_col:
+                rating = st.slider(
+                    label="",
+                    min_value=1,
+                    max_value=5,
+                    value=int(user_ratings.get(row["track_id"], 3)),
+                    key=f"rating_{current_user}_{i}",
+                    step=1,
+                )
+                user_ratings[row["track_id"]] = rating
+
+        # Navigation buttons
+        col_prev, col_next = st.columns([1, 2])
+        with col_next:
+            if idx_rater < len(rater_names) - 1:
+                if st.button(
+                    "➡️ Save ratings & next person", use_container_width=True
+                ):
+                    st.session_state.active_rater_idx += 1
+                    st.rerun()
+            else:
+                if st.button(
+                    "🎉 Generate final playlist",
+                    type="primary",
+                    use_container_width=True,
+                ):
+                    recommended_ids = recommend_group_playlist(
+                        st.session_state.ratings,
+                        st.session_state.n_desired_songs,
                     )
-                    st.stop()
 
-                st.session_state.recommended_ids = recommended_ids
-                st.session_state.evaluation_done = True
-                st.session_state.step = 4
-                st.session_state.final_success_message = True
-                st.rerun()
+                    if not recommended_ids:
+                        st.error(
+                            "We didn’t get enough usable ratings to generate recommendations."
+                        )
+                        st.stop()
 
-    st.markdown("</div>", unsafe_allow_html=True)
+                    st.session_state.recommended_ids = recommended_ids
+                    st.session_state.evaluation_done = True
+                    st.session_state.step = 4
+                    st.session_state.final_success_message = True
+                    st.rerun()
+
+        st.markdown("</div>", unsafe_allow_html=True)
 
 
 # =========================================================
@@ -566,39 +579,40 @@ def step_final_playlist():
     if st.session_state.step < 4 or not st.session_state.evaluation_done:
         return
 
-    st.markdown(
-        """
-        <div class="card">
-            <div class="card-header">Step 3 – Your final recommended playlist</div>
-        """,
-        unsafe_allow_html=True,
-    )
+    with st.container():
+        st.markdown(
+            """
+            <div class="card">
+                <div class="card-header">Step 3 – Your final recommended playlist</div>
+            """,
+            unsafe_allow_html=True,
+        )
 
-    if st.session_state.final_success_message:
-        st.success("✅ Playlist generated based on the whole group’s preferences!")
-        st.session_state.final_success_message = False
+        if st.session_state.final_success_message:
+            st.success("✅ Playlist generated based on the whole group’s preferences!")
+            st.session_state.final_success_message = False
 
-    s_t = load_tracks()
-    df_final = s_t[s_t["track_id"].isin(st.session_state.recommended_ids)][
-        ["title", "artist"]
-    ]
+        s_t = load_tracks()
+        df_final = s_t[s_t["track_id"].isin(st.session_state.recommended_ids)][
+            ["title", "artist"]
+        ]
 
-    st.dataframe(
-        df_final.reset_index(drop=True),
-        use_container_width=True,
-        hide_index=True,
-    )
+        st.dataframe(
+            df_final.reset_index(drop=True),
+            use_container_width=True,
+            hide_index=True,
+        )
 
-    st.markdown("**Summary**")
-    st.write(f"- Total songs: **{len(df_final)}**")
+        st.markdown("**Summary**")
+        st.write(f"- Total songs: **{len(df_final)}**")
 
-    st.markdown("---")
-    if st.button("🔁 Start over", use_container_width=True):
-        for key in list(st.session_state.keys()):
-            del st.session_state[key]
-        st.rerun()
+        st.markdown("---")
+        if st.button("🔁 Start over", use_container_width=True):
+            for key in list(st.session_state.keys()):
+                del st.session_state[key]
+            st.rerun()
 
-    st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
 
 # =========================================================
