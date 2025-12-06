@@ -1,0 +1,164 @@
+genre_id,#tracks,parent,title,top_level,main_category,main_category_id
+187,292,5,20th Century Classical,5,Classical / Neue Musik / Art Music,6
+442,170,5,Chamber Music,5,Classical / Neue Musik / Art Music,6
+443,216,5,Choral Music,5,Classical / Neue Musik / Art Music,6
+5,4106,0,Classical,5,Classical / Neue Musik / Art Music,6
+322,630,5,Composed Music,5,Classical / Neue Musik / Art Music,6
+659,1239,5,Contemporary Classical,5,Classical / Neue Musik / Art Music,6
+441,161,5,Opera,5,Classical / Neue Musik / Art Music,6
+444,25,5,Symphony,5,Classical / Neue Musik / Art Music,6
+42,5723,15,Ambient Electronic,15,Club / Electronic / IDM / Bass,3
+401,189,181,Bigbeat,15,Club / Electronic / IDM / Bass,3
+185,511,15,Breakcore - Hard,15,Club / Electronic / IDM / Bass,3
+400,823,182,Chill-out,15,Club / Electronic / IDM / Bass,3
+297,2208,15,Chip Music,15,Club / Electronic / IDM / Bass,3
+240,1231,297,Chiptune,15,Club / Electronic / IDM / Bass,3
+296,1414,15,Dance,15,Club / Electronic / IDM / Bass,3
+495,2061,15,Downtempo,15,Club / Electronic / IDM / Bass,3
+337,500,15,Drum & Bass,15,Club / Electronic / IDM / Bass,3
+468,1144,15,Dubstep,15,Club / Electronic / IDM / Bass,3
+15,34413,0,Electronic,15,Club / Electronic / IDM / Bass,3
+183,2809,15,Glitch,15,Club / Electronic / IDM / Bass,3
+182,1482,15,House,15,Club / Electronic / IDM / Bass,3
+236,3472,15,IDM,15,Club / Electronic / IDM / Bass,3
+695,258,15,Jungle,15,Club / Electronic / IDM / Bass,3
+184,1013,15,Minimal Electronic,15,Club / Electronic / IDM / Bass,3
+491,78,468,Skweee,15,Club / Electronic / IDM / Bass,3
+181,2140,15,Techno,15,Club / Electronic / IDM / Bass,3
+286,1751,15,Trip-Hop,15,Club / Electronic / IDM / Bass,3
+22,774,38,Audio Collage,38,Experimental / Avant-Garde / Noise / Sound Art,9
+1,8693,38,Avant-Garde,38,Experimental / Avant-Garde / Noise / Sound Art,9
+1193,72,763,Christmas,38,Experimental / Avant-Garde / Noise / Sound Art,9
+47,2546,38,Drone,38,Experimental / Avant-Garde / Noise / Sound Art,9
+41,6110,38,Electroacoustic,38,Experimental / Avant-Garde / Noise / Sound Art,9
+38,38154,0,Experimental,38,Experimental / Avant-Garde / Noise / Sound Art,9
+30,3237,38,Field Recordings,38,Experimental / Avant-Garde / Noise / Sound Art,9
+763,268,16,Holiday,38,Experimental / Avant-Garde / Noise / Sound Art,9
+250,4261,38,Improv,38,Experimental / Avant-Garde / Noise / Sound Art,9
+360,201,6,Kid-Friendly,38,Experimental / Avant-Garde / Noise / Sound Art,9
+456,1392,38,Minimalism,38,Experimental / Avant-Garde / Noise / Sound Art,9
+247,2957,38,Musique Concrete,38,Experimental / Avant-Garde / Noise / Sound Art,9
+32,7268,38,Noise,38,Experimental / Avant-Garde / Noise / Sound Art,9
+6,914,38,Novelty,38,Experimental / Avant-Garde / Noise / Sound Art,9
+514,1414,38,Sound Art,38,Experimental / Avant-Garde / Noise / Sound Art,9
+224,1916,38,Sound Collage,38,Experimental / Avant-Garde / Noise / Sound Art,9
+16,304,6,Sound Effects,38,Experimental / Avant-Garde / Noise / Sound Art,9
+186,682,38,Sound Poetry,38,Experimental / Avant-Garde / Noise / Sound Art,9
+125,1511,38,Unclassifiable,38,Experimental / Avant-Garde / Noise / Sound Art,9
+137,994,9,Americana,9,Folk / Country / Americana / Singer-Songwriter,7
+63,178,9,Bluegrass,9,Folk / Country / Americana / Singer-Songwriter,7
+180,161,17,British Folk,17,Folk / Country / Americana / Singer-Songwriter,7
+9,1987,0,Country,9,Folk / Country / Americana / Singer-Songwriter,7
+651,79,9,Country & Western,9,Folk / Country / Americana / Singer-Songwriter,7
+17,12706,0,Folk,17,Folk / Country / Americana / Singer-Songwriter,7
+94,1289,17,Freak-Folk,17,Folk / Country / Americana / Singer-Songwriter,7
+49,753,17,Free-Folk,17,Folk / Country / Americana / Singer-Songwriter,7
+8,868,0,Old-Time / Historic,8,Folk / Country / Americana / Singer-Songwriter,7
+33,2267,17,Psych-Folk,17,Folk / Country / Americana / Singer-Songwriter,7
+169,128,9,Rockabilly,9,Folk / Country / Americana / Singer-Songwriter,7
+103,4162,17,Singer-Songwriter,17,Folk / Country / Americana / Singer-Songwriter,7
+493,4,651,Western Swing,9,Folk / Country / Americana / Singer-Songwriter,7
+580,202,21,Abstract Hip-Hop,21,Hip-Hop / Beats / RnB / Funk,4
+100,740,21,Alternative Hip-Hop,21,Hip-Hop / Beats / RnB / Funk,4
+542,735,21,Breakbeat,21,Hip-Hop / Beats / RnB / Funk,4
+377,1,19,Deep Funk,14,Hip-Hop / Beats / RnB / Funk,4
+11,367,14,Disco,14,Hip-Hop / Beats / RnB / Funk,4
+19,773,14,Funk,14,Hip-Hop / Beats / RnB / Funk,4
+21,8389,0,Hip-Hop,21,Hip-Hop / Beats / RnB / Funk,4
+811,1192,21,Hip-Hop Beats,21,Hip-Hop / Beats / RnB / Funk,4
+83,84,21,Nerdcore,21,Hip-Hop / Beats / RnB / Funk,4
+539,638,21,Rap,21,Hip-Hop / Beats / RnB / Funk,4
+14,1499,0,Soul-RnB,14,Hip-Hop / Beats / RnB / Funk,4
+693,56,21,Wonky,21,Hip-Hop / Beats / RnB / Funk,4
+178,0,4,Be-Bop,4,Jazz / Blues,5
+179,104,4,Big Band/Swing,4,Jazz / Blues,5
+3,1752,0,Blues,3,Jazz / Blues,5
+74,1531,4,Free-Jazz,4,Jazz / Blues,5
+567,66,3,Gospel,3,Jazz / Blues,5
+4,4126,0,Jazz,4,Jazz / Blues,5
+97,291,4,Jazz: Out,4,Jazz / Blues,5
+37,97,4,Jazz: Vocal,4,Jazz / Blues,5
+906,107,4,Modern Jazz,4,Jazz / Blues,5
+13,730,0,Easy Listening,13,Pop / Mainstream / Synth,2
+170,47,13,Easy Listening: Vocal,13,Pop / Mainstream / Synth,2
+76,7144,10,Experimental Pop,10,Pop / Mainstream / Synth,2
+311,440,13,Lounge,13,Pop / Mainstream / Synth,2
+810,120,13,Nu-Jazz,13,Pop / Mainstream / Synth,2
+10,13845,0,Pop,10,Pop / Mainstream / Synth,2
+362,1835,10,Synth Pop,10,Pop / Mainstream / Synth,2
+167,152,31,Black-Metal,12,Rock / Alternative / Metal / Punk,1
+101,196,31,Death-Metal,12,Rock / Alternative / Metal / Punk,1
+64,563,25,Electro-Punk,12,Rock / Alternative / Metal / Punk,1
+85,3548,12,Garage,12,Rock / Alternative / Metal / Punk,1
+314,482,12,Goth,12,Rock / Alternative / Metal / Punk,1
+439,314,31,Grindcore,12,Rock / Alternative / Metal / Punk,1
+109,1419,25,Hardcore,12,Rock / Alternative / Metal / Punk,1
+66,5432,12,Indie-Rock,12,Rock / Alternative / Metal / Punk,1
+70,2230,12,Industrial,12,Rock / Alternative / Metal / Punk,1
+36,688,12,Krautrock,12,Rock / Alternative / Metal / Punk,1
+27,6041,12,Lo-Fi,12,Rock / Alternative / Metal / Punk,1
+45,2469,12,Loud-Rock,12,Rock / Alternative / Metal / Punk,1
+31,1498,12,Metal,12,Rock / Alternative / Metal / Punk,1
+88,517,12,New Wave,12,Rock / Alternative / Metal / Punk,1
+71,600,25,No Wave,12,Rock / Alternative / Metal / Punk,1
+53,2071,45,Noise-Rock,12,Rock / Alternative / Metal / Punk,1
+89,1858,25,Post-Punk,12,Rock / Alternative / Metal / Punk,1
+26,1952,12,Post-Rock,12,Rock / Alternative / Metal / Punk,1
+111,1003,25,Power-Pop,12,Rock / Alternative / Metal / Punk,1
+98,795,12,Progressive,12,Rock / Alternative / Metal / Punk,1
+58,2502,12,Psych-Rock,12,Rock / Alternative / Metal / Punk,1
+25,9261,12,Punk,12,Rock / Alternative / Metal / Punk,1
+12,32923,0,Rock,12,Rock / Alternative / Metal / Punk,1
+440,116,12,Rock Opera,12,Rock / Alternative / Metal / Punk,1
+359,762,12,Shoegaze,12,Rock / Alternative / Metal / Punk,1
+90,251,53,Sludge,12,Rock / Alternative / Metal / Punk,1
+113,484,26,Space-Rock,12,Rock / Alternative / Metal / Punk,1
+404,265,85,Surf,12,Rock / Alternative / Metal / Punk,1
+361,175,109,Thrash,12,Rock / Alternative / Metal / Punk,1
+107,7206,1235,Ambient,1235,Spoken / Soundtrack / Misc,10
+374,9,20,Banter,20,Spoken / Soundtrack / Misc,10
+7,217,20,Comedy,20,Spoken / Soundtrack / Misc,10
+538,338,18,Compilation,1235,Spoken / Soundtrack / Misc,10
+1235,14938,0,Instrumental,1235,Spoken / Soundtrack / Misc,10
+166,122,65,Interview,20,Spoken / Soundtrack / Misc,10
+465,18,20,Musical Theater,20,Spoken / Soundtrack / Misc,10
+267,360,1235,New Age,1235,Spoken / Soundtrack / Misc,10
+188,301,20,Poetry,20,Spoken / Soundtrack / Misc,10
+65,518,20,Radio,20,Spoken / Soundtrack / Misc,10
+43,210,65,Radio Art,20,Spoken / Soundtrack / Misc,10
+428,73,20,Radio Theater,20,Spoken / Soundtrack / Misc,10
+18,5913,1235,Soundtrack,1235,Spoken / Soundtrack / Misc,10
+20,1876,0,Spoken,20,Spoken / Soundtrack / Misc,10
+138,490,20,Spoken Weird,20,Spoken / Soundtrack / Misc,10
+378,177,20,Spoken Word,20,Spoken / Soundtrack / Misc,10
+189,26,65,Talk Radio,20,Spoken / Soundtrack / Misc,10
+92,329,2,African,2,World / Global / Reggae / Latin,8
+81,110,92,Afrobeat,2,World / Global / Reggae / Latin,8
+172,118,2,Asia-Far East,2,World / Global / Reggae / Latin,8
+118,608,2,Balkan,2,World / Global / Reggae / Latin,8
+175,0,86,Bollywood,2,World / Global / Reggae / Latin,8
+171,234,2,Brazilian,2,World / Global / Reggae / Latin,8
+177,72,2,Celtic,2,World / Global / Reggae / Latin,8
+502,67,46,Cumbia,2,World / Global / Reggae / Latin,8
+130,727,2,Europe,2,World / Global / Reggae / Latin,8
+1156,26,130,Fado,2,World / Global / Reggae / Latin,8
+232,47,2,Flamenco,2,World / Global / Reggae / Latin,8
+77,387,2,French,2,World / Global / Reggae / Latin,8
+86,216,2,Indian,2,World / Global / Reggae / Latin,8
+2,5271,0,International,2,World / Global / Reggae / Latin,8
+741,57,130,Klezmer,2,World / Global / Reggae / Latin,8
+504,114,2,Latin,2,World / Global / Reggae / Latin,8
+46,573,2,Latin America,2,World / Global / Reggae / Latin,8
+102,176,2,Middle East,2,World / Global / Reggae / Latin,8
+173,4,86,N. Indian Traditional,2,World / Global / Reggae / Latin,8
+214,40,92,North African,2,World / Global / Reggae / Latin,8
+176,23,2,Pacific,2,World / Global / Reggae / Latin,8
+117,62,2,Polka,2,World / Global / Reggae / Latin,8
+602,94,79,Reggae - Dancehall,2,World / Global / Reggae / Latin,8
+79,880,2,Reggae - Dub,2,World / Global / Reggae / Latin,8
+524,112,130,Romany (Gypsy),2,World / Global / Reggae / Latin,8
+808,12,46,Salsa,2,World / Global / Reggae / Latin,8
+174,17,86,South Indian Traditional,2,World / Global / Reggae / Latin,8
+619,115,130,Spanish,2,World / Global / Reggae / Latin,8
+1060,30,46,Tango,2,World / Global / Reggae / Latin,8
+1032,60,102,Turkish,2,World / Global / Reggae / Latin,8
