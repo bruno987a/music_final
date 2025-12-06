@@ -29,17 +29,16 @@ st.set_page_config(
 )
 
 # =========================================================
-# Global Styles (Cookable-inspired, colors swapped)
+# Global Styles (Cookable-ish, with card wrapping)
 # =========================================================
 st.markdown(
     """
     <style>
-    /* Overall background – now plain white */
+    /* Overall background – white */
     .stApp {
         background: #ffffff;
     }
 
-    /* Main title */
     .main-title {
         font-size: 2.6rem;
         font-weight: 800;
@@ -53,8 +52,8 @@ st.markdown(
         margin-bottom: 1.5rem;
     }
 
-    /* Card-like containers – light grey / gradient */
-    .card {
+    /* Any Streamlit block that CONTAINS .step-card becomes a grey card */
+    div[data-testid="stVerticalBlock"]:has(.step-card) {
         background: radial-gradient(circle at top left, #fdfbfb 0, #ebedee 40%, #f7f7f7 100%);
         border-radius: 1.1rem;
         padding: 1.2rem 1.4rem;
@@ -63,10 +62,11 @@ st.markdown(
         margin-bottom: 1rem;
     }
 
-    .card-header {
-        font-weight: 700;
-        font-size: 1.1rem;
-        margin-bottom: 0.2rem;
+    /* The marker itself is invisible */
+    .step-card {
+        height: 0;
+        margin: 0;
+        padding: 0;
     }
 
     /* Sidebar steps */
@@ -264,7 +264,7 @@ def recommend_group_playlist(ratings_dict, n_songs: int):
 # Sidebar / Progress
 # =========================================================
 def render_sidebar():
-    st.sidebar.title("🎧 Smart Playlist")
+    st.sidebar.title("Progress")
 
     step0_done = st.session_state.step > 1
     step1_done = st.session_state.criteria_confirmed
@@ -306,15 +306,12 @@ def render_sidebar():
 # =========================================================
 def step_group_setup():
     with st.container():
-        st.markdown(
-            """
-            <div class="card">
-                <div class="card-header">Step 0 – Group setup</div>
-                <p style="font-size:0.9rem; color:#6b7280;">
-                Add everyone who will rate songs. We’ll combine all tastes into one smart playlist.
-                </p>
-            """,
-            unsafe_allow_html=True,
+        # Marker so the whole block becomes a card
+        st.markdown('<div class="step-card"></div>', unsafe_allow_html=True)
+
+        st.markdown("### Step 0 – Group setup")
+        st.caption(
+            "Add everyone who will rate songs. We’ll combine all tastes into one smart playlist."
         )
 
         if st.session_state.step == 1:
@@ -346,9 +343,7 @@ def step_group_setup():
                         )
                     )
 
-            confirm = st.button("✅ Confirm group & continue", use_container_width=True)
-
-            if confirm:
+            if st.button("✅ Confirm group & continue", use_container_width=True):
                 clean_names = [(n.strip() or f"User {i+1}") for i, n in enumerate(names)]
                 st.session_state.num_raters = int(num)
                 st.session_state.rater_names = clean_names
@@ -357,13 +352,10 @@ def step_group_setup():
                 st.session_state.step = 2
                 st.rerun()
         else:
-            st.info(
-                "👥 **Group:** "
-                + ", ".join(st.session_state.rater_names)
-                + f" — Total raters: {st.session_state.num_raters}"
-            )
-
-        st.markdown("</div>", unsafe_allow_html=True)
+            # New summary format
+            total = st.session_state.num_raters
+            names_display = ", ".join(st.session_state.rater_names)
+            st.info(f"**Total raters:** {total} – {names_display}")
 
 
 # =========================================================
@@ -374,15 +366,11 @@ def step_criteria():
         return
 
     with st.container():
-        st.markdown(
-            """
-            <div class="card">
-                <div class="card-header">Step 1 – Playlist generation criteria</div>
-                <p style="font-size:0.9rem; color:#6b7280;">
-                Choose how focused the playlist should be and the kind of vibe you want.
-                </p>
-            """,
-            unsafe_allow_html=True,
+        st.markdown('<div class="step-card"></div>', unsafe_allow_html=True)
+
+        st.markdown("### Step 1 – Playlist generation criteria")
+        st.caption(
+            "Choose how focused the playlist should be and the kind of vibe you want."
         )
 
         genre_map = {
@@ -426,11 +414,9 @@ def step_criteria():
                 15,
             )
 
-            confirm = st.button(
+            if st.button(
                 "✅ Confirm criteria & start rating", use_container_width=True
-            )
-
-            if confirm:
+            ):
                 st.session_state.criteria_confirmed = True
                 st.session_state.step = 3
                 st.session_state.evaluation_done = False
@@ -452,8 +438,6 @@ def step_criteria():
 """
             )
 
-        st.markdown("</div>", unsafe_allow_html=True)
-
 
 # =========================================================
 # Step 2 – Quick Evaluation
@@ -463,23 +447,25 @@ def step_quick_evaluation():
         return
 
     with st.container():
-        st.markdown(
-            """
-            <div class="card">
-                <div class="card-header">Step 2 – Quick song evaluation</div>
-                <p style="font-size:0.9rem; color:#6b7280;">
-                Everyone rates a handful of songs. We’ll learn what the whole group likes and dislikes.
-                </p>
-            """,
-            unsafe_allow_html=True,
-        )
+        st.markdown('<div class="step-card"></div>', unsafe_allow_html=True)
+
+        st.markdown("### Step 2 – Quick song evaluation")
+
+        # Dynamic description depending on 1 vs many raters
+        if st.session_state.num_raters > 1:
+            st.caption(
+                "Everyone rates a handful of songs. We’ll learn what the whole group likes and dislikes."
+            )
+        else:
+            st.caption(
+                "Please rate a handful of songs. We'll learn what you like and dislike."
+            )
 
         rater_names = st.session_state.rater_names
         idx_rater = st.session_state.active_rater_idx
         current_user = rater_names[idx_rater]
 
         st.write(f"**Rater {idx_rater + 1} / {len(rater_names)}:** {current_user}")
-        st.caption("Use the sliders (1 = dislike · 5 = love).")
 
         st.session_state.ratings.setdefault(current_user, {})
         user_ratings = st.session_state.ratings[current_user]
@@ -537,16 +523,18 @@ def step_quick_evaluation():
                 )
                 user_ratings[row["track_id"]] = rating
 
-        # Navigation buttons
-        col_prev, col_next = st.columns([1, 2])
-        with col_next:
-            if idx_rater < len(rater_names) - 1:
+        # Navigation / action buttons – centered
+        if idx_rater < len(rater_names) - 1:
+            col_left, col_center, col_right = st.columns([1, 2, 1])
+            with col_center:
                 if st.button(
                     "➡️ Save ratings & next person", use_container_width=True
                 ):
                     st.session_state.active_rater_idx += 1
                     st.rerun()
-            else:
+        else:
+            col_left, col_center, col_right = st.columns([1, 2, 1])
+            with col_center:
                 if st.button(
                     "🎉 Generate final playlist",
                     type="primary",
@@ -569,8 +557,6 @@ def step_quick_evaluation():
                     st.session_state.final_success_message = True
                     st.rerun()
 
-        st.markdown("</div>", unsafe_allow_html=True)
-
 
 # =========================================================
 # Step 3 – Final Playlist
@@ -580,16 +566,17 @@ def step_final_playlist():
         return
 
     with st.container():
-        st.markdown(
-            """
-            <div class="card">
-                <div class="card-header">Step 3 – Your final recommended playlist</div>
-            """,
-            unsafe_allow_html=True,
-        )
+        st.markdown('<div class="step-card"></div>', unsafe_allow_html=True)
+
+        st.markdown("### Step 3 – Your final recommended playlist")
 
         if st.session_state.final_success_message:
-            st.success("✅ Playlist generated based on the whole group’s preferences!")
+            # Dynamic success message depending on number of raters
+            if st.session_state.num_raters > 1:
+                msg = "✅ Playlist generated based on the whole group’s preferences!"
+            else:
+                msg = "✅ Playlist generated based on your preferences!"
+            st.success(msg)
             st.session_state.final_success_message = False
 
         s_t = load_tracks()
@@ -612,15 +599,12 @@ def step_final_playlist():
                 del st.session_state[key]
             st.rerun()
 
-        st.markdown("</div>", unsafe_allow_html=True)
-
 
 # =========================================================
 # Main Layout
 # =========================================================
 render_sidebar()
 
-# Hero section (Cookable-style header, metrics removed)
 st.markdown('<div class="main-title">Smart Playlist Generator</div>', unsafe_allow_html=True)
 st.markdown(
     '<div class="main-subtitle">'
@@ -634,4 +618,4 @@ step_criteria()
 step_quick_evaluation()
 step_final_playlist()
 
-st.markdown('<div class="footer">© 2025 Cookable · Smart Playlist</div>', unsafe_allow_html=True)
+st.markdown('<div class="footer">© 2025 Smart Playlist</div>', unsafe_allow_html=True)
