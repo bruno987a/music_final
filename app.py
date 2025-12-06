@@ -29,7 +29,7 @@ st.set_page_config(
 )
 
 # =========================================================
-# Global Styles (Cookable-ish, with card wrapping)
+# Global Styles (Cookable-ish, with per-step cards only)
 # =========================================================
 st.markdown(
     """
@@ -52,8 +52,9 @@ st.markdown(
         margin-bottom: 1.5rem;
     }
 
-    /* Any Streamlit block that CONTAINS .step-card becomes a grey card */
-    div[data-testid="stVerticalBlock"]:has(.step-card) {
+    /* Only INNER vertical blocks that contain .step-card get card styling
+       (so NOT the whole main page) */
+    .block-container div[data-testid="stVerticalBlock"] div[data-testid="stVerticalBlock"]:has(.step-card) {
         background: radial-gradient(circle at top left, #fdfbfb 0, #ebedee 40%, #f7f7f7 100%);
         border-radius: 1.1rem;
         padding: 1.2rem 1.4rem;
