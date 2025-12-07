@@ -36,7 +36,7 @@ st.markdown(
     <style>
     /* Make global text bigger */
     html, body, .stApp {
-        font-size: 15px;  /* base size up from default */
+        font-size: 16px;  /* base size up from default */
     }
 
     /* Overall background – white */
