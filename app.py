@@ -666,4 +666,4 @@ step_criteria()
 step_quick_evaluation()
 step_final_playlist()
 
-st.markdown('<div class="footer">© 2025 Smart Playlist</div>', unsafe_allow_html=True)
+st.markdown('<div class="footer">© 2025 </div>', unsafe_allow_html=True)
