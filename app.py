@@ -49,14 +49,14 @@ st.markdown(
     .main-subtitle {
         font-size: 1rem;
         color: #666;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.2rem;
     }
 
-    /* Only INNER vertical blocks that contain .step-card get card styling */
+    /* Cards for each step – tighter padding so content starts closer to the edge */
     .block-container div[data-testid="stVerticalBlock"] div[data-testid="stVerticalBlock"]:has(.step-card) {
         background: radial-gradient(circle at top left, #fdfbfb 0, #ebedee 40%, #f7f7f7 100%);
         border-radius: 1.1rem;
-        padding: 1.2rem 1.4rem;
+        padding: 0.8rem 1rem;  /* was larger; now tighter */
         box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
         border: 1px solid rgba(148, 163, 184, 0.3);
         margin-bottom: 1rem;
@@ -69,20 +69,20 @@ st.markdown(
         padding: 0;
     }
 
-    /* DARKER input backgrounds (number, text, select) */
+    /* WHITE input backgrounds (number, text, select) */
     div[data-testid="stNumberInput"] input,
     div[data-testid="stTextInput"] input,
     div[data-testid="stSelectbox"] div[role="combobox"] {
-        background-color: #d1d5db !important;
+        background-color: #ffffff !important;
         border-radius: 0.6rem !important;
-        border: 1px solid #9ca3af !important;
+        border: 1px solid #d1d5db !important;
     }
 
-    /* DARKER + / - buttons on number input */
+    /* WHITE + / - buttons on number input */
     div[data-testid="stNumberInput"] button {
-        background-color: #d1d5db !important;
+        background-color: #ffffff !important;
         border-radius: 0.6rem !important;
-        border: 1px solid #9ca3af !important;
+        border: 1px solid #d1d5db !important;
     }
 
     /* Sidebar steps */
