@@ -36,7 +36,7 @@ st.markdown(
     <style>
     /* Make global text bigger */
     html, body, .stApp {
-        font-size: 18px;  /* base size up from default */
+        font-size: 16px;  /* base size up from default */
     }
 
     /* Overall background – white */
@@ -221,7 +221,7 @@ def load_features():
 
 
 # =========================================================
-# Utility Functions (DB sampling + ML)
+# Utility Functions
 # =========================================================
 def rand_track_genre(main_cat_id: int, n: int) -> pd.DataFrame:
     """Pick n random tracks within a chosen main genre."""
@@ -259,12 +259,6 @@ def build_user_profile(ratings_list, rated_ids, features_df):
 
 
 def recommend_group_playlist(ratings_dict, n_songs: int):
-    """
-    Equivalent to your old ML section:
-    - builds a user profile per rater
-    - averages them to a group vector
-    - uses KNN (cosine) over reduced_features.csv
-    """
     features_14_scaled = load_features()
     user_profiles = []
 
@@ -329,11 +323,6 @@ def render_sidebar():
         st.sidebar.markdown(
             f"<div class='{css}'>{icon} {label}</div>", unsafe_allow_html=True
         )
-
-    st.sidebar.markdown("---")
-    st.sidebar.caption(
-        "Tip: You can always come back and start over once you’ve seen your playlist."
-    )
 
 
 # =========================================================
@@ -664,10 +653,7 @@ def step_final_playlist():
 # =========================================================
 render_sidebar()
 
-st.markdown(
-    '<div class="main-title">Smart Playlist Generator</div>',
-    unsafe_allow_html=True,
-)
+st.markdown('<div class="main-title">Smart Playlist Generator</div>', unsafe_allow_html=True)
 st.markdown(
     '<div class="main-subtitle">'
     "Create group playlists that balance everyone’s taste, using a little data magic."
@@ -680,4 +666,4 @@ step_criteria()
 step_quick_evaluation()
 step_final_playlist()
 
-st.markdown('<div class="footer">© 2025 Smart Playlist</div>', unsafe_allow_html=True)
+st.markdown('<div class="footer">© 2025 </div>', unsafe_allow_html=True)
