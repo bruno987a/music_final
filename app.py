@@ -324,11 +324,6 @@ def render_sidebar():
             f"<div class='{css}'>{icon} {label}</div>", unsafe_allow_html=True
         )
 
-    st.sidebar.markdown("---")
-    st.sidebar.caption(
-        "Tip: You can always come back and start over once you’ve seen your playlist."
-    )
-
 
 # =========================================================
 # Setup (Step 0)
