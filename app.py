@@ -69,12 +69,13 @@ st.markdown(
         padding: 0;
     }
 
-    /* DARKER input backgrounds for key widgets */
+    /* DARKER input backgrounds */
     div[data-testid="stNumberInput"] input,
     div[data-testid="stTextInput"] input,
     div[data-testid="stSelectbox"] div[role="combobox"] {
-        background-color: #e5e7eb;  /* slightly darker grey */
-        border-radius: 0.6rem;
+        background-color: #d1d5db !important;
+        border-radius: 0.6rem !important;
+        border: 1px solid #9ca3af !important;
     }
 
     /* Sidebar steps */
@@ -402,17 +403,18 @@ def step_criteria():
             with col1:
                 similarity_raw = st.selectbox(
                     "Similarity level",
-                    ["Choose an option", "Genre", "Artist", "Mixed"],
-                    index=0,
+                    ["Genre", "Artist", "Mixed"],
+                    index=None,
+                    placeholder="Choose an option",
                     key="similarity_raw",
                 )
 
             with col2:
-                genre_options = ["Choose an option"] + list(genre_map.keys())
                 genre_raw = st.selectbox(
                     "Preferred genre",
-                    genre_options,
-                    index=0,
+                    list(genre_map.keys()),
+                    index=None,
+                    placeholder="Choose an option",
                     key="genre_raw",
                 )
 
@@ -426,9 +428,20 @@ def step_criteria():
             if st.button(
                 "✅ Confirm criteria & start rating", use_container_width=True
             ):
-                if similarity_raw == "Choose an option" or genre_raw == "Choose an option":
-                    st.warning(
-                        "Please choose both a similarity level and a preferred genre before continuing."
+                if similarity_raw is None or genre_raw is None:
+                    st.markdown(
+                        """
+                        <div style="
+                            padding: 0.8rem 1rem;
+                            background-color: #fee2e2;
+                            color: #b91c1c;
+                            border: 1px solid #b91c1c;
+                            border-radius: 0.6rem;
+                            font-weight: 500;">
+                            Please choose both a similarity level and a preferred genre before continuing.
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
                     )
                 else:
                     # Store final, real choices
