@@ -34,20 +34,25 @@ st.set_page_config(
 st.markdown(
     """
     <style>
+    /* Make global text bigger */
+    html, body, .stApp {
+        font-size: 18px;  /* base size up from default */
+    }
+
     /* Overall background – white */
     .stApp {
         background: #ffffff;
     }
 
     .main-title {
-        font-size: 2.6rem;
+        font-size: 3rem;          /* bigger main title */
         font-weight: 800;
         letter-spacing: -0.03em;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.35rem;
     }
 
     .main-subtitle {
-        font-size: 1rem;
+        font-size: 1.1rem;        /* bigger subtitle */
         color: #666;
         margin-bottom: 1.2rem;
     }
@@ -56,7 +61,7 @@ st.markdown(
     .block-container div[data-testid="stVerticalBlock"] div[data-testid="stVerticalBlock"]:has(.step-card) {
         background: radial-gradient(circle at top left, #fdfbfb 0, #ebedee 40%, #f7f7f7 100%);
         border-radius: 1.1rem;
-        padding: 0.8rem 1rem;  /* was larger; now tighter */
+        padding: 0.8rem 1rem;
         box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
         border: 1px solid rgba(148, 163, 184, 0.3);
         margin-bottom: 1rem;
@@ -76,6 +81,7 @@ st.markdown(
         background-color: #ffffff !important;
         border-radius: 0.6rem !important;
         border: 1px solid #d1d5db !important;
+        font-size: 1rem !important;  /* make input text bigger */
     }
 
     /* WHITE + / - buttons on number input */
@@ -83,13 +89,19 @@ st.markdown(
         background-color: #ffffff !important;
         border-radius: 0.6rem !important;
         border: 1px solid #d1d5db !important;
+        font-size: 1rem !important;
+    }
+
+    /* Make most labels and normal text a bit larger */
+    label, .stMarkdown p, .stMarkdown li, .stCheckbox, .stRadio, .stSlider label {
+        font-size: 1rem !important;
     }
 
     /* Sidebar steps */
     .step-label {
         padding: 0.35rem 0.5rem;
         border-radius: 0.8rem;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         margin-bottom: 0.2rem;
         display: flex;
         align-items: center;
@@ -119,11 +131,11 @@ st.markdown(
     }
     .song-title {
         font-weight: 600;
-        font-size: 0.95rem;
+        font-size: 1rem;
         color: #111827;
     }
     .song-artist {
-        font-size: 0.82rem;
+        font-size: 0.9rem;
         color: #6b7280;
     }
 
@@ -132,7 +144,7 @@ st.markdown(
         text-align: center;
         color: #9ca3af;
         padding: 20px 0 5px 0;
-        font-size: 0.8rem;
+        font-size: 0.9rem;
     }
     </style>
     """,
@@ -534,7 +546,7 @@ def step_quick_evaluation():
                 "border-radius:0 0.75rem 0.75rem 0; font-weight:600; "
                 "display:flex; justify-content:space-between; align-items:center;'>"
                 "<span>Rating</span>"
-                "<span style='font-weight:400; font-size:0.75rem;'>1 = dislike · 5 = love</span>"
+                "<span style='font-weight:400; font-size:0.8rem;'>1 = dislike · 5 = love</span>"
                 "</div>",
                 unsafe_allow_html=True,
             )
@@ -613,7 +625,6 @@ def step_final_playlist():
         st.markdown("### Final recommended playlist")
 
         if st.session_state.final_success_message:
-            # Dynamic success message depending on number of raters
             if st.session_state.num_raters > 1:
                 msg = "✅ Playlist generated based on the whole group’s preferences!"
             else:
