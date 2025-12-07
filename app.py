@@ -69,10 +69,17 @@ st.markdown(
         padding: 0;
     }
 
-    /* DARKER input backgrounds */
+    /* DARKER input backgrounds (number, text, select) */
     div[data-testid="stNumberInput"] input,
     div[data-testid="stTextInput"] input,
     div[data-testid="stSelectbox"] div[role="combobox"] {
+        background-color: #d1d5db !important;
+        border-radius: 0.6rem !important;
+        border: 1px solid #9ca3af !important;
+    }
+
+    /* DARKER + / - buttons on number input */
+    div[data-testid="stNumberInput"] button {
         background-color: #d1d5db !important;
         border-radius: 0.6rem !important;
         border: 1px solid #9ca3af !important;
@@ -282,7 +289,7 @@ def render_sidebar():
     step3_done = st.session_state.step >= 4
 
     steps = [
-        ("Step 0 – Group setup", step0_done),
+        ("Step 0 – Setup", step0_done),
         ("Step 1 – Criteria", step1_done),
         ("Step 2 – Quick evaluation", step2_done),
         ("Step 3 – Final playlist", step3_done),
@@ -312,13 +319,13 @@ def render_sidebar():
 
 
 # =========================================================
-# Step 0 – Group Setup
+# Setup (Step 0)
 # =========================================================
 def step_group_setup():
     with st.container():
         st.markdown('<div class="step-card"></div>', unsafe_allow_html=True)
 
-        st.markdown("### Step 0 – Group setup")
+        st.markdown("### Setup")
         st.caption(
             "Add everyone who will rate songs. We’ll combine all tastes into one smart playlist."
         )
@@ -367,7 +374,7 @@ def step_group_setup():
 
 
 # =========================================================
-# Step 1 – Criteria
+# Playlist generation criteria (Step 1)
 # =========================================================
 def step_criteria():
     if st.session_state.step < 2:
@@ -376,7 +383,7 @@ def step_criteria():
     with st.container():
         st.markdown('<div class="step-card"></div>', unsafe_allow_html=True)
 
-        st.markdown("### Step 1 – Playlist generation criteria")
+        st.markdown("### Playlist generation criteria")
         st.caption(
             "Choose how focused the playlist should be and the kind of vibe you want."
         )
@@ -475,7 +482,7 @@ def step_criteria():
 
 
 # =========================================================
-# Step 2 – Quick Evaluation
+# Quick song evaluation (Step 2)
 # =========================================================
 def step_quick_evaluation():
     if st.session_state.step < 3 or not st.session_state.criteria_confirmed:
@@ -484,7 +491,7 @@ def step_quick_evaluation():
     with st.container():
         st.markdown('<div class="step-card"></div>', unsafe_allow_html=True)
 
-        st.markdown("### Step 2 – Quick song evaluation")
+        st.markdown("### Quick song evaluation")
 
         # Dynamic description depending on 1 vs many raters
         if st.session_state.num_raters > 1:
@@ -594,7 +601,7 @@ def step_quick_evaluation():
 
 
 # =========================================================
-# Step 3 – Final Playlist
+# Final recommended playlist (Step 3)
 # =========================================================
 def step_final_playlist():
     if st.session_state.step < 4 or not st.session_state.evaluation_done:
@@ -603,7 +610,7 @@ def step_final_playlist():
     with st.container():
         st.markdown('<div class="step-card"></div>', unsafe_allow_html=True)
 
-        st.markdown("### Step 3 – Your final recommended playlist")
+        st.markdown("### Final recommended playlist")
 
         if st.session_state.final_success_message:
             # Dynamic success message depending on number of raters
