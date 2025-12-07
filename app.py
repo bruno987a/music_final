@@ -255,28 +255,6 @@ def render_sidebar():
             f"<div class='{css}'>{icon} {label}</div>", unsafe_allow_html=True
         )
 
-# =========================================================
-# Main Layout
-# =========================================================
-render_sidebar()
-
-st.markdown(
-    '<div class="main-title">Smart Playlist Generator</div>',
-    unsafe_allow_html=True,
-)
-st.markdown(
-    '<div class="main-subtitle">'
-    "Create group playlists that balance everyone’s taste."
-    "</div>",
-    unsafe_allow_html=True,
-)
-
-step_group_setup()
-step_criteria()
-step_quick_evaluation()
-step_final_playlist()
-
-st.markdown('<div class="footer">© Smart Playlist</div>', unsafe_allow_html=True)
 
 # =========================================================
 # Setup (Step 0)
@@ -692,4 +670,25 @@ def step_final_playlist():
             st.rerun()
 
 
+# =========================================================
+# Main Layout
+# =========================================================
+render_sidebar()
 
+st.markdown(
+    '<div class="main-title">Smart Playlist Generator</div>',
+    unsafe_allow_html=True,
+)
+st.markdown(
+    '<div class="main-subtitle">'
+    "Create group playlists that balance everyone’s taste."
+    "</div>",
+    unsafe_allow_html=True,
+)
+
+step_group_setup()
+step_criteria()
+step_quick_evaluation()
+step_final_playlist()
+
+st.markdown('<div class="footer">© Smart Playlist</div>', unsafe_allow_html=True)
