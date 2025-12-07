@@ -418,6 +418,19 @@ def step_criteria():
             if st.button(
                 "✅ Confirm criteria & start rating", use_container_width=True
             ):
+                # What the user selected in the dropdown
+                raw_similarity = st.session_state.get("similarity", "None")
+
+                # If user chose "✨ Let the algorithm choose" (stored as "None"),
+                # randomly pick one of the concrete strategies
+                if raw_similarity == "None":
+                    effective_similarity = choice(["Genre", "Artist", "Mixed"])
+                else:
+                    effective_similarity = raw_similarity
+
+    # Store the actually used similarity
+                st.session_state["similarity_effective"] = effective_similarity
+
                 st.session_state.criteria_confirmed = True
                 st.session_state.step = 3
                 st.session_state.evaluation_done = False
@@ -425,6 +438,7 @@ def step_criteria():
                 if "candidate_songs" in st.session_state:
                     del st.session_state["candidate_songs"]
                 st.rerun()
+
         else:
             similarity_value = st.session_state.get("similarity", "None")
             chosen_genre_id = st.session_state.get("chosen_genre")
