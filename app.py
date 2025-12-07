@@ -29,7 +29,7 @@ st.set_page_config(
 )
 
 # =========================================================
-# Global Styles (Cookable-ish, with per-step cards only)
+# Global Styles
 # =========================================================
 st.markdown(
     """
@@ -52,8 +52,7 @@ st.markdown(
         margin-bottom: 1.5rem;
     }
 
-    /* Only INNER vertical blocks that contain .step-card get card styling
-       (so NOT the whole main page) */
+    /* Only INNER vertical blocks that contain .step-card get card styling */
     .block-container div[data-testid="stVerticalBlock"] div[data-testid="stVerticalBlock"]:has(.step-card) {
         background: radial-gradient(circle at top left, #fdfbfb 0, #ebedee 40%, #f7f7f7 100%);
         border-radius: 1.1rem;
@@ -63,11 +62,19 @@ st.markdown(
         margin-bottom: 1rem;
     }
 
-    /* The marker itself is invisible */
+    /* Invisible marker for step cards */
     .step-card {
         height: 0;
         margin: 0;
         padding: 0;
+    }
+
+    /* DARKER input backgrounds for key widgets */
+    div[data-testid="stNumberInput"] input,
+    div[data-testid="stTextInput"] input,
+    div[data-testid="stSelectbox"] div[role="combobox"] {
+        background-color: #e5e7eb;  /* slightly darker grey */
+        border-radius: 0.6rem;
     }
 
     /* Sidebar steps */
@@ -138,6 +145,7 @@ defaults = {
     "final_success_message": False,
     "chosen_genre": None,
     "n_desired_songs": 15,
+    # "similarity" will be set after criteria confirmation
 }
 for k, v in defaults.items():
     if k not in st.session_state:
@@ -307,7 +315,6 @@ def render_sidebar():
 # =========================================================
 def step_group_setup():
     with st.container():
-        # Marker so the whole block becomes a card
         st.markdown('<div class="step-card"></div>', unsafe_allow_html=True)
 
         st.markdown("### Step 0 – Group setup")
@@ -353,7 +360,6 @@ def step_group_setup():
                 st.session_state.step = 2
                 st.rerun()
         else:
-            # New summary format
             total = st.session_state.num_raters
             names_display = ", ".join(st.session_state.rater_names)
             st.info(f"**Total raters:** {total} – {names_display}")
@@ -394,19 +400,21 @@ def step_criteria():
             col1, col2 = st.columns(2)
 
             with col1:
-                similarity = st.selectbox(
+                similarity_raw = st.selectbox(
                     "Similarity level",
-                    ["None", "Genre", "Artist", "Mixed"],
+                    ["Choose an option", "Genre", "Artist", "Mixed"],
                     index=0,
-                    format_func=lambda x: "✨ Let the algorithm choose"
-                    if x == "None"
-                    else x,
-                    key="similarity",
+                    key="similarity_raw",
                 )
 
             with col2:
-                key_genre = st.selectbox("Preferred genre", list(genre_map.keys()))
-                st.session_state.chosen_genre = genre_map[key_genre]
+                genre_options = ["Choose an option"] + list(genre_map.keys())
+                genre_raw = st.selectbox(
+                    "Preferred genre",
+                    genre_options,
+                    index=0,
+                    key="genre_raw",
+                )
 
             st.session_state.n_desired_songs = st.slider(
                 "Playlist length (number of songs)",
@@ -418,31 +426,30 @@ def step_criteria():
             if st.button(
                 "✅ Confirm criteria & start rating", use_container_width=True
             ):
-                # What the user selected in the dropdown
-                raw_similarity = st.session_state.get("similarity", "None")
-
-                # If user chose "✨ Let the algorithm choose" (stored as "None"),
-                # randomly pick one of the concrete strategies
-                if raw_similarity == "None":
-                    effective_similarity = choice(["Genre", "Artist", "Mixed"])
+                if similarity_raw == "Choose an option" or genre_raw == "Choose an option":
+                    st.warning(
+                        "Please choose both a similarity level and a preferred genre before continuing."
+                    )
                 else:
-                    effective_similarity = raw_similarity
+                    # Store final, real choices
+                    st.session_state["similarity"] = similarity_raw
+                    st.session_state.chosen_genre = genre_map[genre_raw]
 
-    # Store the actually used similarity
-                st.session_state["similarity_effective"] = effective_similarity
-
-                st.session_state.criteria_confirmed = True
-                st.session_state.step = 3
-                st.session_state.evaluation_done = False
-                st.session_state.active_rater_idx = 0
-                if "candidate_songs" in st.session_state:
-                    del st.session_state["candidate_songs"]
-                st.rerun()
-
+                    st.session_state.criteria_confirmed = True
+                    st.session_state.step = 3
+                    st.session_state.evaluation_done = False
+                    st.session_state.active_rater_idx = 0
+                    if "candidate_songs" in st.session_state:
+                        del st.session_state["candidate_songs"]
+                    st.rerun()
         else:
-            similarity_value = st.session_state.get("similarity", "None")
+            similarity_value = st.session_state.get("similarity", "Not set")
             chosen_genre_id = st.session_state.get("chosen_genre")
-            chosen_genre_name = reverse_genre_map.get(chosen_genre_id, "Unknown")
+            chosen_genre_name = (
+                reverse_genre_map.get(chosen_genre_id, "Not set")
+                if chosen_genre_id is not None
+                else "Not set"
+            )
 
             st.info(
                 f"""
