@@ -36,7 +36,7 @@ st.markdown(
     <style>
     /* Make global text bigger */
     html, body, .stApp {
-        font-size: 16px;  /* base size up from default */
+        font-size: 18px;  /* base size up from default */
     }
 
     /* Overall background – white */
@@ -221,75 +221,6 @@ def load_features():
 
 
 # =========================================================
-# Utility Functions
-# =========================================================
-def rand_track_genre(main_cat_id: int, n: int) -> pd.DataFrame:
-    """Pick n random tracks within a chosen main genre."""
-    s_genres = load_genre_map()
-    s_t = load_tracks()
-
-    genre_ids = list(
-        set(s_genres.loc[s_genres["main_category_id"] == main_cat_id, "genre_id"])
-    )
-    if not genre_ids:
-        return s_t.sample(n=min(n, len(s_t)))
-
-    rand_gen_l = [choice(genre_ids) for _ in range(n)]
-
-    p_to_rate = []
-    for g_id in rand_gen_l:
-        poss_songs = s_t[s_t["genres_all"].apply(lambda ids: g_id in ids)]
-        if len(poss_songs) == 0:
-            continue
-        p_to_rate.append(poss_songs.sample(1))
-    if not p_to_rate:
-        return s_t.sample(n=min(n, len(s_t)))
-    return pd.concat(p_to_rate, ignore_index=True)
-
-
-def weight_adjustment(points: int) -> float:
-    """Transform ratings: dislikes pull away, likes push stronger."""
-    return (points / 3.0) ** 2
-
-
-def build_user_profile(ratings_list, rated_ids, features_df):
-    ratings = np.asarray(ratings_list, dtype=float)
-    vecs = features_df.loc[rated_ids].values
-    return np.average(vecs, axis=0, weights=ratings)
-
-
-def recommend_group_playlist(ratings_dict, n_songs: int):
-    features_14_scaled = load_features()
-    user_profiles = []
-
-    for _, rating_dict in ratings_dict.items():
-        if not rating_dict:
-            continue
-
-        rated_ids = [tid for tid in rating_dict.keys() if tid in features_14_scaled.index]
-        if not rated_ids:
-            continue
-
-        ratings_list = [weight_adjustment(rating_dict[tid]) for tid in rated_ids]
-        user_profiles.append(
-            build_user_profile(ratings_list, rated_ids, features_14_scaled)
-        )
-
-    if len(user_profiles) == 0:
-        return []
-
-    group_vector = np.mean(user_profiles, axis=0)
-    X = features_14_scaled.values
-    track_ids = features_14_scaled.index.to_numpy()
-
-    knn_model = NearestNeighbors(metric="cosine", n_neighbors=min(200, len(track_ids)))
-    knn_model.fit(X)
-
-    _, nn_idx = knn_model.kneighbors(group_vector.reshape(1, -1), n_neighbors=n_songs)
-    return track_ids[nn_idx[0]].tolist()
-
-
-# =========================================================
 # Sidebar / Progress
 # =========================================================
 def render_sidebar():
@@ -323,6 +254,11 @@ def render_sidebar():
         st.sidebar.markdown(
             f"<div class='{css}'>{icon} {label}</div>", unsafe_allow_html=True
         )
+
+    st.sidebar.markdown("---")
+    st.sidebar.caption(
+        "Tip: You can always come back and start over once you’ve seen your playlist."
+    )
 
 
 # =========================================================
@@ -489,7 +425,7 @@ def step_criteria():
 
 
 # =========================================================
-# Quick song evaluation (Step 2)
+# Quick song evaluation (Step 2) + ML inline
 # =========================================================
 def step_quick_evaluation():
     if st.session_state.step < 3 or not st.session_state.criteria_confirmed:
@@ -519,11 +455,44 @@ def step_quick_evaluation():
         st.session_state.ratings.setdefault(current_user, {})
         user_ratings = st.session_state.ratings[current_user]
 
-        # Generate candidate songs once
+        # --------- Generate candidate songs ONCE (inline, no utility function)
         if "candidate_songs" not in st.session_state:
-            st.session_state.candidate_songs = rand_track_genre(
-                st.session_state.chosen_genre, 5
+            s_genres = load_genre_map()
+            s_t = load_tracks()
+
+            main_cat_id = st.session_state.chosen_genre
+            genre_ids = list(
+                set(
+                    s_genres.loc[
+                        s_genres["main_category_id"] == main_cat_id, "genre_id"
+                    ]
+                )
             )
+
+            if not genre_ids:
+                # Fallback: random songs from all tracks
+                st.session_state.candidate_songs = s_t.sample(
+                    n=min(5, len(s_t))
+                )
+            else:
+                rand_gen_l = [choice(genre_ids) for _ in range(5)]
+                p_to_rate = []
+                for g_id in rand_gen_l:
+                    poss_songs = s_t[
+                        s_t["genres_all"].apply(lambda ids: g_id in ids)
+                    ]
+                    if len(poss_songs) == 0:
+                        continue
+                    p_to_rate.append(poss_songs.sample(1))
+
+                if not p_to_rate:
+                    st.session_state.candidate_songs = s_t.sample(
+                        n=min(5, len(s_t))
+                    )
+                else:
+                    st.session_state.candidate_songs = pd.concat(
+                        p_to_rate, ignore_index=True
+                    )
 
         songs_df = st.session_state.candidate_songs
 
@@ -589,21 +558,79 @@ def step_quick_evaluation():
                     type="primary",
                     use_container_width=True,
                 ):
-                    recommended_ids = recommend_group_playlist(
-                        st.session_state.ratings,
-                        st.session_state.n_desired_songs,
-                    )
+                    # ------------------------------
+                    # START MACHINE LEARNING PART (inline)
+                    # ------------------------------
+                    features_14_scaled = load_features()
 
-                    if not recommended_ids:
+                    # local helper functions, like in your old code
+                    def build_user_profile(ratings_list, rated_ids, features_df):
+                        ratings = np.asarray(ratings_list, dtype=float)
+                        vecs = features_df.loc[rated_ids].values
+                        return np.average(vecs, axis=0, weights=ratings)
+
+                    def weight_adjustment(points: int) -> float:
+                        # transform 1–5 into weights, like your old version
+                        return (points / 3.0) ** 2
+
+                    user_profiles = []
+                    for username, rating_dict in st.session_state.ratings.items():
+                        if not rating_dict:
+                            continue
+
+                        rated_ids = [
+                            tid
+                            for tid in rating_dict.keys()
+                            if tid in features_14_scaled.index
+                        ]
+                        if not rated_ids:
+                            continue
+
+                        ratings_list = [
+                            weight_adjustment(rating_dict[tid]) for tid in rated_ids
+                        ]
+                        user_profiles.append(
+                            build_user_profile(
+                                ratings_list, rated_ids, features_14_scaled
+                            )
+                        )
+
+                    if len(user_profiles) == 0:
                         st.error(
-                            "We didn’t get enough usable ratings to generate recommendations."
+                            "There are no usable ratings - no recommendation possible."
                         )
                         st.stop()
 
+                    group_vector = np.mean(user_profiles, axis=0)
+
+                    X = features_14_scaled.values
+                    track_ids = features_14_scaled.index.to_numpy()
+
+                    knn_model = NearestNeighbors(
+                        metric="cosine",
+                        n_neighbors=min(200, len(track_ids)),
+                    )
+                    knn_model.fit(X)
+
+                    def recommend(group_vec, n_songs):
+                        _, nn_idx = knn_model.kneighbors(
+                            group_vec.reshape(1, -1), n_neighbors=n_songs
+                        )
+                        return track_ids[nn_idx[0]]
+
+                    recommended_ids = recommend(
+                        group_vector, st.session_state.n_desired_songs
+                    ).tolist()
+
+                    # store for step 4
                     st.session_state.recommended_ids = recommended_ids
                     st.session_state.evaluation_done = True
                     st.session_state.step = 4
+
+                    # tell next run to show success message on the final page
                     st.session_state.final_success_message = True
+
+                    # force rerun so sidebar + final playlist update immediately
                     st.rerun()
 
 
@@ -653,7 +680,10 @@ def step_final_playlist():
 # =========================================================
 render_sidebar()
 
-st.markdown('<div class="main-title">Smart Playlist Generator</div>', unsafe_allow_html=True)
+st.markdown(
+    '<div class="main-title">Smart Playlist Generator</div>',
+    unsafe_allow_html=True,
+)
 st.markdown(
     '<div class="main-subtitle">'
     "Create group playlists that balance everyone’s taste, using a little data magic."
@@ -666,4 +696,4 @@ step_criteria()
 step_quick_evaluation()
 step_final_playlist()
 
-st.markdown('<div class="footer">© 2025 </div>', unsafe_allow_html=True)
+st.markdown('<div class="footer">© 2025 Smart Playlist</div>', unsafe_allow_html=True)
